@@ -28,7 +28,16 @@ Pone <- function(n, k, strategy, nreps){
   #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of a single prisoner succeeding in finding their number.
   if (strategy == 1) {
-    initial_box <- k
+    number_found <- 0
+    next_box <- k
+    for (i in 1:nreps){
+      boxes <- sample(1:(2*n), size = 1)
+      if (which( boxes == k ) == k){
+        number_found <- number_found + 1
+      } else {
+        next_box <- boxes 
+      }
+    }
   }
   else if (strategy ==2) {
     initial_box <- sample(1:2*n, size=1)
