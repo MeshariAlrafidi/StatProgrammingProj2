@@ -16,7 +16,7 @@
 # number they go to box k and open it. They continue doing this until they either have found their number or have chosen 
 # n boxes. 
 # Strategy 2. The prisoner chooses a random box then repeats the steps in strategy 1.
-# Strategy 3. n boxes are checked randomnly 
+# Strategy 3. n boxes are checked randomly 
 
 #---------------------Part One----------------------------------
 
@@ -89,14 +89,19 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
   #         k: the prisoner’s number
   #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of a single prisoner succeeding in finding their number.
+
   
+  # success_trial represents the number of times all prisoners (participating in the experiment) finding their number.
+  # Initialization of "success_trial"
+  success_trial <- 0  
   
-  # number_found represents the number that a card found inside of the box.
-  # Initialization of "number_found"
-  number_found <- 0 
-  
+
   # Running the experiment nreps times
   for (i in 1:nreps){
+    
+    # number_found represents the number that a card found inside of the box.
+    # Initialization of "number_found"
+    number_found <- 0 
     
     # Assign numbers (1 to 2*n) randomly within the 2*n boxes before starting the experiment.
     # Random placement of numbers within the boxes in each simulation.
@@ -122,13 +127,15 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
         }
       }
     }
-    if (number_found != length(prisoners)){
-      number_found <- 0
+    
+    # A trial considers as success if all prisoners participating in the experiment find their number.
+    if (number_found == length(prisoners)){
+      success_trial <- success_trial + 1
     }
   }
   
   # probability of success (the prisoner(s) find(s) the card with their number on it).
-  prob = number_found / nreps
+  prob = success_trial / nreps
   return(prob)
 }
 
@@ -140,11 +147,17 @@ picking_randomly <- function(n, prisoners, nreps){
   #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of a single prisoner succeeding in finding their number.
   
-  # number_found represents the number found inside of the box
-  number_found <- 0
+  # success_trial represents the number of times all prisoners (participating in the experiment) finding their number.
+  # Initialization of "success_trial"
+  success_trial <- 0  
   
+
   # Running the experiment nreps times
-  for (i in 1:nreps){ 
+  for (i in 1:nreps){
+    
+    # number_found represents the number that a card found inside of the box.
+    # Initialization of "number_found" in each repetition
+    number_found <- 0
     
     for (k in 1:length(prisoners)){
       
@@ -158,8 +171,10 @@ picking_randomly <- function(n, prisoners, nreps){
         number_found <- number_found + 1
       }
     }
-    if (number_found != length(prisoners)){
-      number_found <- 0
+    
+    # A trial considers as success if all prisoners participating in the experiment find their number.
+    if (number_found == length(prisoners)){
+      success_trial <- success_trial + 1
     }
   }  
   # probability of success (the prisoner(s) find(s) the card with their number on it).
@@ -174,7 +189,7 @@ Pone(n = 100, k = 4, strategy = 1, nreps = 1000)
 # Example estimating the individual success probability under Strategy 2, n =100
 Pone(n = 100, k = 4, strategy = 2, nreps = 1000)
 
-# Example estimating the individual success probability under Strategy 1, n =100
+# Example estimating the individual success probability under Strategy 3, n =100
 Pone(n = 100, k = 4, strategy = 3, nreps = 1000)
 
 
