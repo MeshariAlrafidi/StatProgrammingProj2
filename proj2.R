@@ -236,34 +236,44 @@ Pall(n = 100, strategy = 3, nreps = 1000)
 #}
 
 dloop <- function(n, nreps){
-  # Each box is connected to another box by the number inside it, forming a chain or loop of boxes.
-  # This function estimates the probability of all possible loops of length  1 to 2n occuring
-  # at least once in random permutatation of boxes and and cards. 
-  # Inputs: n: maximum number of boxes a prisoner is allowed to open
-  #         nreps: number of iterations
-  # Outputs: 2n-vector of probabilities
   
-  # create 2n boxes 
-  u <- sample(1:(2*n))
-  
-  # create 2n cards
-  k <- sample(1:(2*n))
-  
-  for (i in (1:(2*n))){
+  totalcount <- rep(0, 2*n)
+  for (rep in 1:nreps){
+      
+    boxes <- sample(1:(2*n))
+    loopcount <- rep(0, 2*n)
+    left_to_check <- 1:(2*n)
     
-    depth <- 0
-    # checking first box
-    if (u[i] == k){
-      depth <- depth + 1
-    }
-    #checking next box
-    else{
-      while (u[i] != k){
-        nxt <- u[i]
+    i<-1
+    while (i %in% left_to_check) {
+      
+        counter <- 1
+        j <- i
+        checked <- c()
+        while(i != boxes[j]){
+          counter <- counter + 1
+          checked <- c(checked, j)
+          j <- boxes[j]
+        }
+        
+        checked <- c(checked, j)
+        loopcount[counter] <- 1
+        left_to_check <- left_to_check[-match(checked, left_to_check)]
+  
+      if (length(left_to_check) == 0){
+        break
       }
+        
+      i <- left_to_check[1]
+  
     }
+    totalcount <- totalcount + loopcount
   }
+  
+  return(totalcount / nreps)
 }
+
+plot(dloop(50,1000))
 
 
   
