@@ -178,7 +178,7 @@ picking_randomly <- function(n, prisoners, nreps){
     }
   }  
   # probability of success (the prisoner(s) find(s) the card with their number on it).
-  prob = number_found / nreps
+  prob = success_trial / nreps
   return(prob)
 }
 
