@@ -20,23 +20,27 @@
 
 #---------------------Part One----------------------------------
 
-Pone <- function(n, k, strategy, nreps){
+Pone <- function(n, k, strategy, nreps=10000){
   # This function estimates the probability a single prisoner succeeding in finding their number.
   # Input:  n: the maximum number of boxes the prisoner is allowed to open
   #         k: the prisoner’s number
   #         strategy: which strategy to implement {1,2,3}
-  #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
+  #         nreps (10000 by default): the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of a single prisoner succeeding in finding their number.
   
   if (strategy == 1) {
     
+    # The prisoner selects the box with their number on the lid as their first box.
     initial_box <- k
+    
     prob <- following_numbers(n, k, initial_box, nreps)
     
   }
   else if (strategy ==2) {
     
+    # The prisoner selects the first box randomly.
     initial_box <- sample(1:(2*n), size=1)
+    
     prob <- following_numbers(n, k, initial_box, nreps)
     
   }
@@ -48,11 +52,11 @@ Pone <- function(n, k, strategy, nreps){
   return(prob)
 }
 
-Pall <- function(n, strategy, nreps){
+Pall <- function(n, strategy, nreps=10000){
   # This function estimates the probability of all prisoners finding their numbers.
   # Input:  n: the maximum number of boxes a prisoner is allowed to open
   #         strategy: which strategy to implement {1,2,3}
-  #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
+  #         nreps (10000 by default): the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of all prisoners succeeding in finding their number.
   
   # Assigning a unique prisoner number to each of the 2n prisoners.
@@ -61,13 +65,17 @@ Pall <- function(n, strategy, nreps){
   
   if (strategy == 1) {
     
+    # Each of the prisoners selects the box with their number on the lid as their first box.
     initial_box <- prisoners
+    
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
   }
   else if (strategy ==2) {
     
+    # Each of the prisoners selects the first box randomly.
     initial_box <- sample(1:(2*n), size=(2*n))
+    
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
   }
@@ -91,7 +99,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
   # Output: prob: probability of a single prisoner succeeding in finding their number.
 
   
-  # success_trial represents the number of times all prisoners (participating in the experiment) finding their number.
+  # success_trial represents the number of trials all prisoners (participating in the experiment) finding their boxes.
   # Initialization of "success_trial"
   success_trial <- 0  
   
@@ -99,9 +107,9 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
   # Running the experiment nreps times
   for (i in 1:nreps){
     
-    # number_found represents the number that a card found inside of the box.
-    # Initialization of "number_found"
-    number_found <- 0 
+    # boxes_found represents the number of prisoners found their boxes.
+    # Reset of "boxes_found" in each repetition.
+    boxes_found <- 0 
     
     # Assign numbers (1 to 2*n) randomly within the 2*n boxes before starting the experiment.
     # Random placement of numbers within the boxes in each simulation.
@@ -120,7 +128,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
         
         # Exit the loop when the prisoner finds the card in the box with their number.
         if (boxes[pick] == prisoners[k]){
-          number_found <- number_found + 1
+          boxes_found <- boxes_found + 1
           break
         }else{
           pick = boxes[pick]
@@ -129,12 +137,12 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
     }
     
     # A trial considers as success if all prisoners participating in the experiment find their number.
-    if (number_found == length(prisoners)){
+    if (boxes_found == length(prisoners)){
       success_trial <- success_trial + 1
     }
   }
   
-  # probability of success (the prisoner(s) find(s) the card with their number on it).
+  # probability of success (the prisoner(s) succeed(s) in finding their number).
   prob = success_trial / nreps
   return(prob)
 }
@@ -147,7 +155,7 @@ picking_randomly <- function(n, prisoners, nreps){
   #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
   # Output: prob: probability of a single prisoner succeeding in finding their number.
   
-  # success_trial represents the number of times all prisoners (participating in the experiment) finding their number.
+  # success_trial represents the number of trials all prisoners (participating in the experiment) finding their boxes.
   # Initialization of "success_trial"
   success_trial <- 0  
   
@@ -155,9 +163,9 @@ picking_randomly <- function(n, prisoners, nreps){
   # Running the experiment nreps times
   for (i in 1:nreps){
     
-    # number_found represents the number that a card found inside of the box.
-    # Initialization of "number_found" in each repetition
-    number_found <- 0
+    # boxes_found represents the number of prisoners found their boxes.
+    # Reset of "boxes_found" in each repetition.
+    boxes_found <- 0 
     
     for (k in 1:length(prisoners)){
       
@@ -168,39 +176,58 @@ picking_randomly <- function(n, prisoners, nreps){
       if (k %in% boxes){
         
         # counter increases
-        number_found <- number_found + 1
+        boxes_found <- boxes_found + 1
       }
     }
     
-    # A trial considers as success if all prisoners participating in the experiment find their number.
-    if (number_found == length(prisoners)){
+    # A trial considers as success if all prisoners participating in the experiment find their box.
+    if (boxes_found == length(prisoners)){
       success_trial <- success_trial + 1
     }
   }  
-  # probability of success (the prisoner(s) find(s) the card with their number on it).
+  # probability of success (the prisoner(s) succeed(s) in finding their number).
   prob = success_trial / nreps
   return(prob)
 }
 
 
-# Example estimating the individual success probability under Strategy 1, n =100
-Pone(n = 100, k = 4, strategy = 1, nreps = 1000)
 
-# Example estimating the individual success probability under Strategy 2, n =100
-Pone(n = 100, k = 4, strategy = 2, nreps = 1000)
+# Example estimating the individual success probability under Strategy 1, n =5 (nreps = 10000 by default)
+Pone(n = 5, k = 4, strategy = 1)
 
-# Example estimating the individual success probability under Strategy 3, n =100
-Pone(n = 100, k = 4, strategy = 3, nreps = 1000)
+# Example estimating the individual success probability under Strategy 2, n =5 (nreps = 10000 by default)
+Pone(n = 5, k = 4, strategy = 2)
+
+# Example estimating the individual success probability under Strategy 3, n =5 (nreps = 10000 by default)
+Pone(n = 5, k = 4, strategy = 3)
+
+# Example estimating the individual success probability under Strategy 1, n =50 (nreps = 10000 by default)
+Pone(n = 50, k = 4, strategy = 1)
+
+# Example estimating the individual success probability under Strategy 2, n =50 (nreps = 10000 by default)
+Pone(n = 50, k = 4, strategy = 2)
+
+# Example estimating the individual success probability under Strategy 3, n =50 (nreps = 10000 by default)
+Pone(n = 50, k = 4, strategy = 3)
 
 
-# Example estimating the joint success probability under Strategy 1, n =5
-Pall(n = 100, strategy = 1, nreps = 1000)
+# Example estimating the joint success probability under Strategy 1, n =5 (nreps = 10000 by default)
+Pall(n = 5, strategy = 1)
 
-# Example estimating the joint success probability under Strategy 2, n =5
-Pall(n = 100, strategy = 2, nreps = 1000)
+# Example estimating the joint success probability under Strategy 2, n =5 (nreps = 10000 by default)
+Pall(n = 5, strategy = 2)
 
-# Example estimating the joint success probability under Strategy 3, n =5
-Pall(n = 100, strategy = 3, nreps = 1000)
+# Example estimating the joint success probability under Strategy 3, n =5 (nreps = 10000 by default)
+Pall(n = 5, strategy = 3)
+
+# Example estimating the joint success probability under Strategy 1, n =50 (nreps = 10000 by default)
+Pall(n = 50, strategy = 1)
+
+# Example estimating the joint success probability under Strategy 2, n =50 (nreps = 10000 by default)
+Pall(n = 50, strategy = 2)
+
+# Example estimating the joint success probability under Strategy 3, n =50 (nreps = 10000 by default)
+Pall(n = 50, strategy = 3)
 
 
 ###########################################################
