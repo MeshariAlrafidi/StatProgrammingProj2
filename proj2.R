@@ -65,4 +65,35 @@ Pone <- function(n, k, strategy, nreps){
   }
 }
 
+dloop <- function(n, nreps){
+  # Each box is connected to another box by the number inside it, forming a chain or loop of boxes.
+  # This function estimates the probability of all possible loops of length  1 to 2n occuring
+  # at least once in random permutatation of boxes and and cards. 
+  # Inputs: n: maximum number of boxes a prisoner is allowed to open
+  #         nreps: number of iterations
+  # Outputs: 2n-vector of probabilities
+  
+  # create 2n boxes 
+  u <- sample(1:(2*n))
+  
+  # create 2n cards
+  k <- sample(1:(2*n))
+  
+  for (i in (1:(2*n))){
+    
+    depth <- 0
+    # checking first box
+    if (u[i] == k){
+      depth <- depth + 1
+    }
+    #checking next box
+    else{
+      while (u[i] != k){
+        nxt <- u[i]
+      }
+    }
+  }
+}
+
+
   
