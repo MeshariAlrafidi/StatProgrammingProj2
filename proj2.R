@@ -277,21 +277,42 @@ Pall(n = 50, strategy = 3)
 #  }
 #}
 
+
+
 dloop <- function(n, nreps){
+  # This function estimate the probability that a cycle of any length will occur in a permutation of length 2n.
+  # Input:
+    # n: The size of the permutation to be considered (i.e. number of prisoners, so 2n boxes are considered)
+    # nreps: The amount of simulations to be run to estimate the probability vector.
+  # Output:
+    # A vector of length 2n where the ith entry is the estimated probability that a cycle of length i will ocurr
+    # in a randomly generated permutation of length 2n.
   
+  # Tracker for all cycles found.
   totalcount <- rep(0, 2*n)
+  
+  # Running nreps simulations.
   for (rep in 1:nreps){
-      
+    
+    # Generating the boxes and cards for this simulation.
     boxes <- sample(1:(2*n))
+    # Tracker for the cycles of this loop only.
     loopcount <- rep(0, 2*n)
+    # Vector containing which boxes have NOT been opened
     left_to_check <- 1:(2*n)
     
+    # Starting with the first box, checking all boxes for a cycle.
+    # After a box has been found to be part of a cycle, it is removed from left_to_check.
     i<-1
     while (i %in% left_to_check) {
       
+      # counter tracks the length of the current cycle.
         counter <- 1
+      # j is a placeholder for opening the next box in a cycle.
         j <- i
+      # tracking which boxes were part of this cycle, to be removed from left_to_check
         checked <- c()
+      # iterating over all boxes in a cycle, incrementing the counter and updating the checked boxes list.
         while(i != boxes[j]){
           counter <- counter + 1
           checked <- c(checked, j)
@@ -299,16 +320,25 @@ dloop <- function(n, nreps){
         }
         
         checked <- c(checked, j)
+        
+        # Indicating that a cycle of length counter was found
+        # To instead enumerate all cycles in the boxes, this can be changed to 
+        # loopcount[counter] <- loopcount[counter] + 1
         loopcount[counter] <- 1
+        
+        # Removing the checked boxes.
         left_to_check <- left_to_check[-match(checked, left_to_check)]
   
+      # If there are no more boxes to check, we are done.
       if (length(left_to_check) == 0){
         break
       }
-        
+       
+    # Setting the next box to start with for the next cycle. 
       i <- left_to_check[1]
   
     }
+    
     totalcount <- totalcount + loopcount
   }
   
