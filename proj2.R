@@ -238,6 +238,7 @@ dloop <- function(n, nreps){
   # Output:
     # A vector of length 2n where the ith entry is the estimated probability that a cycle of length i will ocurr
     # in a randomly generated permutation of length 2n.
+  # Runtime: O(n * nreps)
   
   # Tracker for all cycles found.
   totalcount <- rep(0, 2*n)
@@ -255,7 +256,7 @@ dloop <- function(n, nreps){
     # Starting with the first box, checking all boxes for a cycle.
     # After a box has been found to be part of a cycle, it is removed from left_to_check.
     i<-1
-    while (i %in% left_to_check) {
+    while (length(left_to_check) > 0) {
       
       # counter tracks the length of the current cycle.
         counter <- 1
@@ -279,11 +280,6 @@ dloop <- function(n, nreps){
         
         # Removing the checked boxes.
         left_to_check <- left_to_check[-match(checked, left_to_check)]
-  
-      # If there are no more boxes to check, we are done.
-      if (length(left_to_check) == 0){
-        break
-      }
        
     # Setting the next box to start with for the next cycle. 
       i <- left_to_check[1]
@@ -296,7 +292,27 @@ dloop <- function(n, nreps){
   return(totalcount / nreps)
 }
 
-plot(dloop(50,1000))
+plot(dloop(50,10000), xlab = 'Cycle Length', ylab = 'Probability of Appearing')
+
+# IMPORTANT: The probability of loops larger than 50 appearing are NOT independent events. 
+# The drawers can contain at most one cycle of length >50. So, we can't simply multiply probabilies.
+# Instead, we must look at each run of the simulation:
+nreps <- 10000
+over50cycles <- 0
+
+# Like running dloop(50, 10000), except at each simulation we track if there were any cycles over 50.
+for (i in 1:nreps){
+  probs <- dloop(50,1)
+  if (1 %in% (probs[51:100]) ){
+    over50cycles <- over50cycles + 1
+  }
+}
+
+none_over_50_prob <- 1 - (over50cycles / nreps)
+none_over_50_prob
+
+
+
 
 
   
