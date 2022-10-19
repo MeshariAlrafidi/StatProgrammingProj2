@@ -174,60 +174,80 @@ picking_randomly <- function(n, prisoners, nreps){
   return(prob)
 }
 
+
 # ---------- Example code ----------
 
+# ---- Individual success probability ----
+
 # Example estimating the individual success probability under Strategy 1, n =5 (nreps = 10000 by default)
-Pone(n = 5, k = 4, strategy = 1)
-
-# Example estimating the individual success probability under Strategy 2, n =5 (nreps = 10000 by default)
-Pone(n = 5, k = 4, strategy = 2)
-
-# Example estimating the individual success probability under Strategy 3, n =5 (nreps = 10000 by default)
-Pone(n = 5, k = 4, strategy = 3)
+Pone(n = 5, k = 4 , strategy = 1)
 
 # Example estimating the individual success probability under Strategy 1, n =50 (nreps = 10000 by default)
 Pone(n = 50, k = 4, strategy = 1)
 
+# Example estimating the individual success probability under Strategy 2, n =5 (nreps = 10000 by default)
+Pone(n = 5, k = 4, strategy = 2)
+
 # Example estimating the individual success probability under Strategy 2, n =50 (nreps = 10000 by default)
 Pone(n = 50, k = 4, strategy = 2)
+
+# Example estimating the individual success probability under Strategy 3, n =5 (nreps = 10000 by default)
+Pone(n = 5, k = 4, strategy = 3)
 
 # Example estimating the individual success probability under Strategy 3, n =50 (nreps = 10000 by default)
 Pone(n = 50, k = 4, strategy = 3)
 
+# Computing the individual success probability under strategies 1 and 3 for a different number of boxes (n = 5, and n = 50),
+# the probability of success is almost 1/2 in all those cases.
+# On the other hand, the individual success probability under strategy 2 for n = 5 and n = 50 is close to 4/10 (smaller than under Strategies 1 and 3).
+
+# We know that under strategies 1 and 2, a prisoner opens a box labeled with the card number contained in the previously opened box.
+# So, based on that, each box is a part of a closed loop.
+
+# Starting at the box with their number on it (Strategy 1), without the limit in attempts,
+# the probability of success is 100% since the prisoner's number is guaranteed to be included in that closed loop.
+# However, given that the prisoner can open up to n of the 2n boxes (half of the boxes), the probability of success is 1/2.
+
+# Starting from a randomly selected box, even without the limit on the number of attempts, it is not sure that the prisoner will succeed.
+# It is possible that the prisoner's number is not within the current closed loop.
+# So, it makes sense that the P(success under Strategy 2) < P(success under strategy 1).
+
+# Under strategy 3, we know that each prisoner can open up to n of the 2n boxes (half of the boxes) randomly.
+# So, for each prisoner the P(success) = 1/2.
+
+
+# ---- Joint success probability ----
 
 # Example estimating the joint success probability under Strategy 1, n =5 (nreps = 10000 by default)
 Pall(n = 5, strategy = 1)
 
-# Example estimating the joint success probability under Strategy 2, n =5 (nreps = 10000 by default)
-Pall(n = 5, strategy = 2)
-
-# Example estimating the joint success probability under Strategy 3, n =5 (nreps = 10000 by default)
-Pall(n = 5, strategy = 3)
-
 # Example estimating the joint success probability under Strategy 1, n =50 (nreps = 10000 by default)
 Pall(n = 50, strategy = 1)
+
+# Example estimating the joint success probability under Strategy 2, n =5 (nreps = 10000 by default)
+Pall(n = 5, strategy = 2)
 
 # Example estimating the joint success probability under Strategy 2, n =50 (nreps = 10000 by default)
 Pall(n = 50, strategy = 2)
 
+# Example estimating the joint success probability under Strategy 3, n =5 (nreps = 10000 by default)
+Pall(n = 5, strategy = 3)
+
 # Example estimating the joint success probability under Strategy 3, n =50 (nreps = 10000 by default)
 Pall(n = 50, strategy = 3)
 
+# Computing the joint success probability under strategy 1 for a different number of boxes (2n boxes):
+# n = 5, and n = 50, the probability of success is close to 35% and 31% respectively. 
+# On the other hand, the joint probability under strategies 1 and 3 for different number of boxes (n = 5, n = 50), the probability of success is close to 0.
 
-# ---------- Comments on the results ----------
-# Under strategy 1, ...
-
-# Under strategy 2, ...
-
-# On the other hand, under strategy 3, we know that each prisoner can open up to n of the 2n boxes (half of the boxes) randomly.
-# So, for each prisoner the P(success) = 1/2.
 # We also know that the "the prisoner is not allowed to communicate with prisoners yet to have their go".
-# So, trials between prisoners are independent. P((2n) prisoners succeed)) = (1/2)^(2n).
-# Therefore, for n=50: P(100 prisoners succeed) = (1/2)^100  = close to 0.
-# Even for small n, e.g. n=5: P(10 prisoners succeed) = (1/2)^10 = extremely small.
-
-
-# ---------------------------------------------
+# In addition, under strategy 3, each prisoner opens n boxes randomly. 
+# So, the probabilities of success of each prisoner are independent.
+# Individual success probability under Strategy 3 = 1/2
+# Independent attempts => P((2n) prisoners succeed)) = (1/2)^(2n)
+# Running the code for n = 5 and and n = 50, we find that:
+# n=50: P(100 prisoners succeed) = (1/2)^100  = close to 0.
+# Even for small n: e.g. n = 5: P(10 prisoners succeed) = (1/2)^10 = extremely small.
 
 
 dloop <- function(n, nreps){
@@ -311,8 +331,4 @@ for (i in 1:nreps){
 none_over_50_prob <- 1 - (over50cycles / nreps)
 none_over_50_prob
 
-
-
-
-
-  
+# End of code
