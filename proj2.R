@@ -60,8 +60,8 @@ strategy_selection <- function(n, prisoners, strategy, nreps){
   else if (strategy ==2) {
     
     # The prisoner(s) select(s) the first box randomly.
-    # Two prisoners can start from the same box (replace = T)
-    initial_box <- sample(1:(2*n), size=length(prisoners), replace = T)
+    # Two prisoners can start from the same box (replace = TRUE)
+    initial_box <- sample(1:(2*n), size=length(prisoners), replace = TRUE)
     
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
@@ -97,7 +97,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
     
     # Assign numbers (1 to 2*n) randomly within the 2*n boxes before starting the experiment.
     # Random placement of numbers within the boxes in each simulation.
-    boxes <- sample(1:(2*n), 2*n, replace=F)
+    boxes <- sample(1:(2*n), 2*n, replace=FALSE)
     
     pick <- c()
     
