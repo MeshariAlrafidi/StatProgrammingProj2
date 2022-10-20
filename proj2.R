@@ -3,29 +3,33 @@
 # Brief description of what each team member contributed to the project:
 
 # Proportion of the work was undertaken by each team member: 
-#     Aidan Garrity: dloop final version, plotting, strategy 3, dloop explanations
-#     Eleni Michaelidou: strategy_selection function, following_numbers function, Pone, Pall, example code, Pall explanations
-#     Meshari Alrafidi: previous iterations of dloop, explanations, 
+# Aidan Garrity: dloop final version, plotting, strategy 3, dloop explanations
+# Eleni Michaelidou: strategy_selection function, following_numbers function, Pone, Pall, example code, Pall explanations
+# Meshari Alrafidi: previous iterations of dloop, explanations 
 
 
 # -------------------- Overview of the code --------------------
 
-# In this code we implement a stochastic simulation to investigate the following  puzzle:
-# 2n prisoners are given a natural number to identify them. They enter a room 
-# with 2n boxes, each box containing a number inside it and a number on it's lid. The prisoners' goal is to select the 
-# box with their number in it. They are allowed to choose a maximum of n boxes.
+# In this code we implement a stochastic simulation to investigate the following
+# puzzle: 2n prisoners are given a natural number to identify them. They enter a
+# room with 2n boxes, each box containing a number inside it and a number on
+# it's lid. The prisoners' goal is to select the box with their number in it.
+# They are allowed to choose a maximum of n boxes.
 
 # Three strategies are simulated here:
-    # Strategy 1. A prisoner selects the box with their number on the lid. If the number of the card inside the lid, k, is not their 
-    # number, they go to box k and open it. They continue doing this until they either have found their number or have chosen 
-    # n boxes.
-    # Strategy 2. The prisoner chooses a random box then repeats the steps in strategy 1.
-    # Strategy 3. n boxes are checked randomly
+#   Strategy 1: A prisoner selects the box with their number on the lid. 
+#               If the number of the card inside the lid, k, is not their number,
+#               they go to box k and open it. They continue doing this until they
+#               either have found their number or have chosen n boxes.
+#   Strategy 2: The prisoner starts from a randomly selected box and then repeats
+#               the steps in strategy 1.
+#   Strategy 3: n boxes are checked randomly.
 
 # If all prisoners succeed in finding their number, they are all released.
 
-# The prisoner who attempted to find their number is not allowed to communicate with prisoners yet to have their go.
-# After each prisoner’s go, the room is returned exactly to its original state.
+# The prisoner who attempted to find their number is not allowed to communicate
+# with prisoners yet to have their go. After each prisoner’s go, the room is
+# returned exactly to its original state.
 
 # -------------------------------------------------------------
 
@@ -35,10 +39,13 @@ Pone <- function(n, k, strategy, nreps=10000){
   # Input:  n: the maximum number of boxes the prisoner is allowed to open.
   #         k: the prisoner’s number.
   #         strategy: which strategy to implement {1,2,3}.
-  #         nreps (10000 by default): the number of iterations of the simulations to run (in order to estimate the probability)
-  # Output: prob: probability of a single prisoner succeeding in finding their number under the given strategy.
+  #         nreps (10000 by default): the number of iterations of the simulations
+  #                                   to run (in order to estimate the probability)
+  # Output: prob: probability of a single prisoner succeeding in finding their
+  #               number under the given strategy.
   
-  # Apply function "strategy_selection" to estimate the individual success probability under the given strategy.
+  # Apply function "strategy_selection" to estimate the individual success
+  # probability under the given strategy.
   prob <- strategy_selection(n, k, strategy, nreps)
   
   return(prob)
@@ -48,13 +55,15 @@ Pall <- function(n, strategy, nreps=10000){
   # This function estimates the probability of all prisoners finding their numbers.
   # Input:  n: the maximum number of boxes a prisoner is allowed to open.
   #         strategy: which strategy to implement {1,2,3}.
-  #         nreps (10000 by default): the number of iterations of the simulations to run (in order to estimate the probability).
+  #         nreps (10000 by default): the number of iterations of the simulations
+  #                                   to run (in order to estimate the probability).
   # Output: prob: probability of all prisoners succeeding in finding their number.
   
   # Assigning a unique prisoner number to each of the 2n prisoners.
   prisoners <- c(1:(2*n))
   
-  # Apply function "strategy_selection" to estimate the joint success probability under the given strategy.
+  # Apply function "strategy_selection" to estimate the joint success probability
+  # under the given strategy.
   prob <- strategy_selection(n, prisoners, strategy, nreps)
   
   return(prob)
@@ -62,7 +71,8 @@ Pall <- function(n, strategy, nreps=10000){
 
 
 strategy_selection <- function(n, prisoners, strategy, nreps){
-  # This function is responsible to call the corresponding function based on the given strategy. It returns the probability derived from the given strategy.
+  # This function is responsible to call the corresponding function based on the
+  # given strategy. It returns the probability derived from the given strategy.
   # Input:  n: the maximum number of boxes a prisoner is allowed to open.
   #         prisoners: a vector of prisoners' numbers
   #                    (It can be a vector length 1 -> prisoners = the prisoner's number k (call from Pone function)
@@ -76,7 +86,8 @@ strategy_selection <- function(n, prisoners, strategy, nreps){
     # The prisoner(s) select(s) the box with their number on the lid as their first box.
     initial_box <- prisoners
     
-    # Apply function "following_numbers" to estimate the success probability under strategy 1 (initial_box = prisoners).
+    # Apply function "following_numbers" to estimate the success probability
+    # under strategy 1 (initial_box = prisoners).
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
   }
@@ -86,7 +97,8 @@ strategy_selection <- function(n, prisoners, strategy, nreps){
     # Two prisoners can start from the same box (replace = TRUE)
     initial_box <- sample(1:(2*n), size=length(prisoners), replace = TRUE)
     
-    # Apply function "following_numbers" to estimate the success probability under strategy 2 (initial_box = randomly selected).
+    # Apply function "following_numbers" to estimate the success probability
+    # under strategy 2 (initial_box = randomly selected).
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
   }
@@ -107,10 +119,11 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
   #         prisoners: prisoners' numbers.
   #         initial_box: box number that (each) prisoner will open first.
   #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
-  # Output: prob: the probability of (all) the prisoner(s) succeeding in finding their number, by opening up to n boxes in a closed loop.
+  # Output: prob: the probability of (all) the prisoner(s) succeeding in finding
+  #               their number, by opening up to n boxes in a closed loop.
   
   
-  # success_simulation represents the number of times all prisoners (participating in the experiment) find their boxes.
+  # success_simulation represents the number of simulations all prisoners (participating in the experiment) find their boxes.
   # Initialization of "success_simulation".
   success_simulation <- 0  
   
@@ -182,11 +195,13 @@ picking_randomly <- function(n, prisoners, nreps){
   # Input:  n: number of boxes (each) prisoner opens.
   #         prisoners: prisoners' numbers.
   #         initial_box: box number that (each) prisoner will open first.
-  #         nreps: the number of iterations of the simulations to run (in order to estimate the probability)
-  # Output: prob: the probability of (all) the prisoner(s) succeeding in finding their number, by opening n boxes randomly.
+  #         nreps: the number of iterations of the simulations to run (in order
+  #                to estimate the probability)
+  # Output: prob: the probability of (all) the prisoner(s) succeeding in finding
+  #               their number, by opening n boxes randomly.
   
   
-  # success_simulation represents the number of times all prisoners (participating in the experiment) finding their boxes.
+  # success_simulation represents the number of simulations all prisoners (participating in the experiment) finding their boxes.
   # Initialization of "success_simulation"
   success_simulation <- 0  
   
@@ -281,8 +296,8 @@ Pall(n = 50, strategy = 3)
 
 # Computing the joint success probability under strategy 1 for a different number of boxes (2n boxes):
 # n = 5, and n = 50, the probability of success is close to 35% and 31% respectively. 
-# On the other hand, the joint probability under strategies 2 and 3 for different number of boxes (2n boxes):
-# n = 5 and n = 50 is close to 0.
+# On the other hand, the joint probability under strategies 2 and 3 for a different
+# number of boxes (2n boxes): n = 5 and n = 50 is close to 0.
 
 # So, what is surprising is that it is more likely that 100 (n = 50) prisoners
 # will release (all prisoners find their number) under Strategy 1
@@ -290,13 +305,13 @@ Pall(n = 50, strategy = 3)
 
 # -----
 
-# As explained above (individual success probability under strategy 1), given 
-# that each box is a part of a closed loop and each prisoner starts at the box 
-# with their number on it, the prisoner will succeed if their number is a part 
-# of a loop no longer than n, and that is because each prisoner can open up to n
-# of the 2n boxes. The probability of success for prisoners who their box are 
-# part of the same loop are not independent, since if a prisoner succeed to find
-# their box, then all prisoners on that loop will find their box with the same probability.
+# Given that each box is a part of a closed loop and each prisoner starts at the
+# box with their number on it, the prisoner will succeed if their number is a part 
+# of a loop with length no longer than n, and that is because each prisoner can
+# open up to n of the 2n boxes. The probability of success for prisoners who their
+# box are included in the same cycle (loop) are not independent, since if a
+# prisoner succeed to find their box, then all prisoners on that loop will find
+# their box with the same probability.
 
 # We also know that the "the prisoner is not allowed to communicate with prisoners yet to have their go".
 # In addition, under strategy 3, each prisoner opens n boxes randomly. 
@@ -314,8 +329,8 @@ dloop <- function(n, nreps){
   # in a permutation of length 2n.
   # Input: n: The size of the permutation to be considered (i.e. number of prisoners, so 2n boxes are considered)
   #        nreps: The amount of simulations to be run to estimate the probability vector.
-  # Output: a vector of length 2n where the ith entry is the estimated probability that a cycle of length i will occur
-  #         in a randomly generated permutation of length 2n.
+  # Output: a vector of length 2n where the ith entry is the estimated probability
+  #         that a cycle of length i will occur in a randomly generated permutation of length 2n.
   # Runtime: O(n * nreps)
   
   # Tracker for all cycles found.
