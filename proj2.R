@@ -63,6 +63,45 @@ Pall <- function(n, strategy, nreps=10000){
 }
 
 
+strategy_selection <- function(n, prisoners, strategy, nreps){
+  # This function is responsible to call the corresponding function based on the given strategy. It returns the probability derived from the given strategy.
+  # Input:  n: the maximum number of boxes a prisoner is allowed to open.
+  #         prisoners: a vector of prisoners' numbers
+  #                    (It can be a vector length 1 -> prisoners = the prisoner's number (k)
+  #                    or a vector length 2n -> all prisoners' number.
+  #         strategy: which strategy to implement {1,2,3}.
+  #         nreps: the number of iterations of the simulations to run (in order to estimate the probability).
+  # Output: prob: probability of success derived from the given strategy.
+  
+  if (strategy == 1) {
+    
+    # The prisoner(s) select(s) the box with their number on the lid as their first box.
+    initial_box <- prisoners
+    
+    # Apply function "following_numbers" to estimate the success probability under strategy 1 (initial_box = prisoners).
+    prob <- following_numbers(n, prisoners, initial_box, nreps)
+    
+  }
+  else if (strategy ==2) {
+    
+    # The prisoner(s) select(s) the first box randomly.
+    # Two prisoners can start from the same box (replace = TRUE)
+    initial_box <- sample(1:(2*n), size=length(prisoners), replace = TRUE)
+    
+    # Apply function "following_numbers" to estimate the success probability under strategy 2 (initial_box = randomly selected).
+    prob <- following_numbers(n, prisoners, initial_box, nreps)
+    
+  }
+  else if (strategy == 3){
+    
+    # Apply function "picking_randomly" to estimate the success probability under strategy 3.
+    prob <- picking_randomly(n, prisoners, nreps)
+    
+  }
+  return(prob)
+}
+
+
 following_numbers <- function(n, prisoners, initial_box, nreps){
   # This function estimates the probability of the prisoner(s) succeeding in finding their number.
   # (Each) prisoner opens boxes by following the numbers on the card within the boxes, entering a closed loop.
