@@ -201,6 +201,10 @@ Pone(n = 50, k = 4, strategy = 3)
 # the probability of success is almost 1/2 in all those cases.
 # On the other hand, the individual success probability under strategy 2 for n = 5 and n = 50 is close to 4/10 (smaller than under Strategies 1 and 3).
 
+# So, the probability of a prisoner finding their number under strategies 1 and 3 is the same (50%).
+
+# -----
+
 # We know that under strategies 1 and 2, a prisoner opens a box labeled with the card number contained in the previously opened box.
 # So, based on that, each box is a part of a closed loop.
 
@@ -208,8 +212,8 @@ Pone(n = 50, k = 4, strategy = 3)
 # the probability of success is 100% since the prisoner's number is guaranteed to be included in that closed loop.
 # However, given that the prisoner can open up to n of the 2n boxes (half of the boxes), the probability of success is 1/2.
 
-# Starting from a randomly selected box, even without the limit on the number of attempts, it is not sure that the prisoner will succeed.
-# It is possible that the prisoner's number is not within the current closed loop.
+# Starting from a randomly selected box (Strategy 2), even without the limit on the number of attempts, it is not sure that the prisoner will succeed.
+# It is possible that the prisoner's number is not within the current closed loop, and therefore the prisoner will never find their number entering a "wrong" loop.
 # So, it makes sense that the P(success under Strategy 2) < P(success under strategy 1).
 
 # Under strategy 3, we know that each prisoner can open up to n of the 2n boxes (half of the boxes) randomly.
@@ -240,11 +244,20 @@ Pall(n = 50, strategy = 3)
 # n = 5, and n = 50, the probability of success is close to 35% and 31% respectively. 
 # On the other hand, the joint probability under strategies 1 and 3 for different number of boxes (n = 5, n = 50), the probability of success is close to 0.
 
+# So, what is surprising is that it is more likely that 100 (n = 50) prisoners will release (all prisoners find their number) under Strategy 1
+# than even 10 (n = 5) prisoners open boxes under Strategies 2 and 3.
+
+# -----
+
+# As explained above (individual success probability under strategy 1), given that each box is a part of a closed loop and each prisoner starts at the box with their number on it,
+# the prisoner will succeed if their number is a part of a loop no longer than n, and that is because each prisoner can open up to n of the 2n boxes.
+# The probability of success for prisoners who their box are part of the same loop are not independent,
+# since if a prisoner succeed to find their box, then all prisoners on that loop will find their box with the same probability.
+
 # We also know that the "the prisoner is not allowed to communicate with prisoners yet to have their go".
 # In addition, under strategy 3, each prisoner opens n boxes randomly. 
-# So, the probabilities of success of each prisoner are independent.
-# Individual success probability under Strategy 3 = 1/2
-# Independent attempts => P((2n) prisoners succeed)) = (1/2)^(2n)
+# So, the probability of success for each prisoner is independent.
+# Individual success probability under Strategy 3 = 1/2  and attempts are independent => P((2n) prisoners succeed)) = (1/2)^(2n)
 # Running the code for n = 5 and and n = 50, we find that:
 # n=50: P(100 prisoners succeed) = (1/2)^100  = close to 0.
 # Even for small n: e.g. n = 5: P(10 prisoners succeed) = (1/2)^10 = extremely small.
