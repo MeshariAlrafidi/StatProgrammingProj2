@@ -9,7 +9,7 @@
 
 # -------------------- Overview of the code --------------------
 
-# The code in that file is about using stochastic simulation to investigate the following suprising probability puzzle.
+# The code in that file is about using stochastic simulation to investigate the following surprising probability puzzle.
 # More specifically, We simulate the following puzzle: 2n prisoners are given a natural number to identify them. They enter a room 
 # with 2n boxes, each box containing a number inside it and a number on it's lid. The prisoners' goal is to select the 
 # box with their number in it. They are allowed to choose a maximum of n boxes.
@@ -131,7 +131,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
     # Loop through the prisoners vector (all prisoners try to find their box).
     for (k in 1:length(prisoners)){
       
-      rep_succ <- FALSE
+      prisoner_succ <- FALSE
       
       # Initial box for the prisoner running the experiment.
       next_box <- initial_box[k]
@@ -145,7 +145,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
           
           # counter increases by 1, since the prisoner running the experiment succeeds in finding their number. 
           boxes_found <- boxes_found + 1
-          rep_succ <- TRUE
+          prisoner_succ <- TRUE
           break
           
         }else{
@@ -156,7 +156,7 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
       }
       
       # Exit the loop when one prisoner fails in finding their box.
-      if (!(rep_succ)){
+      if (!(prisoner_succ)){
         break
       }
     }
@@ -197,7 +197,7 @@ picking_randomly <- function(n, prisoners, nreps){
     
     for (k in 1:length(prisoners)){
       
-      rep_succ <- FALSE
+      prisoner_succ <- FALSE
       
       # we create 2n boxes, n of which can be opened.
       boxes <- sample(1:(2*n), n)
@@ -208,11 +208,11 @@ picking_randomly <- function(n, prisoners, nreps){
         # counter increases
         boxes_found <- boxes_found + 1
         
-        rep_succ <- TRUE
+        prisoner_succ <- TRUE
       }
       
       # Exit the loop when one prisoner fails in finding their box.
-      if (!(rep_succ)){
+      if (!(prisoner_succ)){
         break
       }
     }
@@ -319,7 +319,7 @@ Pall(n = 50, strategy = 3)
 
 
 dloop <- function(n, nreps){
-  # This function estimate the probability that a cycle of any length will occur in a permutation of length 2n.
+  # This function estimates the probability that a cycle of any length will occur in a permutation of length 2n.
   # Input: n: The size of the permutation to be considered (i.e. number of prisoners, so 2n boxes are considered)
   #        nreps: The amount of simulations to be run to estimate the probability vector.
   # Output: a vector of length 2n where the ith entry is the estimated probability that a cycle of length i will occur
