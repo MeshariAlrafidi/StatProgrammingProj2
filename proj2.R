@@ -367,7 +367,7 @@ dloop <- function(n, nreps){
     totalcount <- totalcount + loopcount
   }
   
-  return(totalcount / sum(totalcount))
+  return(totalcount / nreps)
 }
 
 plot(dloop(50,10000), xlab = 'Cycle Length', ylab = 'Probability of Appearing')
