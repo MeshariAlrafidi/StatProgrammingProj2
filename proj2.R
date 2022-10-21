@@ -384,7 +384,6 @@ dloop <- function(n, nreps){
         
         # Indicating that a cycle of length counter was found
         # To instead enumerate all cycles in the boxes, this can be changed to 
-        # loopcount[counter] <- loopcount[counter] + 1
         loopcount[counter] <- 1
         
         # Removing the checked boxes.
