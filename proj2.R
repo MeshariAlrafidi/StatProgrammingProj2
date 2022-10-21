@@ -1,5 +1,7 @@
 # Aidan Garrity (s1997567), Eleni Michaelidou (s2226022), Meshari Alrafidi (s2319759)
 
+# Address of githup repo: https://github.com/MeshariAlrafidi/StatProgrammingProj2.git
+
 # Brief description of what each team member contributed to the project:
 
 # Proportion of the work was undertaken by each team member: 
@@ -11,10 +13,10 @@
 # -------------------- Overview of the code --------------------
 
 # In this code we implement a stochastic simulation to investigate the following
-# puzzle: 2n prisoners are given a natural number to identify them. They enter a
-# room with 2n boxes, each box containing a number inside it and a number on
-# it's lid. The prisoners' goal is to select the box with their number in it.
-# They are allowed to choose a maximum of n boxes.
+# probability puzzle: 2n prisoners are given a natural number to identify them.
+# They enter a room with 2n boxes, each box containing a number inside it and a
+# number on it's lid. The prisoners' goal is to select the box with their number
+# in it. They are allowed to choose a maximum of n boxes.
 
 # Three strategies are simulated here:
 #   Strategy 1: A prisoner selects the box with their number on the lid. 
@@ -30,6 +32,9 @@
 # The prisoner who attempted to find their number is not allowed to communicate
 # with prisoners yet to have their go. After each prisoner’s go, the room is
 # returned exactly to its original state.
+
+# One of the above strategies has a surprisingly high probability of allowing 
+# all prisoners to go free (all prisoners find their number).
 
 # -------------------------------------------------------------
 
@@ -71,14 +76,16 @@ Pall <- function(n, strategy, nreps=10000){
 
 
 strategy_selection <- function(n, prisoners, strategy, nreps){
-  # This function is responsible to call the corresponding function based on the
-  # given strategy. It returns the probability derived from the given strategy.
+  # This function is responsible for calling the corresponding function for
+  # estimating probability based on the given strategy. It returns the probability
+  # derived from the given strategy.
   # Input:  n: the maximum number of boxes a prisoner is allowed to open.
   #         prisoners: a vector of prisoners' numbers
   #                    (It can be a vector length 1 -> prisoners = the prisoner's number k (call from Pone function)
   #                    or a vector length 2n -> all prisoners' number (call from Pall function).
   #         strategy: which strategy to implement {1,2,3}.
-  #         nreps: the number of iterations of the simulations to run (in order to estimate the probability).
+  #         nreps: the number of iterations of the simulations to run (in order
+  #                to estimate the probability).
   # Output: prob: probability of success derived from the given strategy.
   
   if (strategy == 1) {
@@ -87,11 +94,11 @@ strategy_selection <- function(n, prisoners, strategy, nreps){
     initial_box <- prisoners
     
     # Apply function "following_numbers" to estimate the success probability
-    # under strategy 1 (initial_box = prisoners).
+    # under strategy 1 (initial_box = prisoners number).
     prob <- following_numbers(n, prisoners, initial_box, nreps)
     
   }
-  else if (strategy ==2) {
+  else if (strategy == 2) {
     
     # The prisoner(s) select(s) the first box randomly.
     # Two prisoners can start from the same box (replace = TRUE)
@@ -128,11 +135,11 @@ following_numbers <- function(n, prisoners, initial_box, nreps){
   success_simulation <- 0  
   
   
-  # Running the experiment nreps times.
+  # Running the experiment nreps times (nreps simulations).
   for (i in 1:nreps){
     
     # boxes_found represents the number of prisoners found their boxes in each simulation.
-    # Reset of "boxes_found" in each repetition.
+    # Reset of "boxes_found" in each simulation.
     boxes_found <- 0 
     
     # Assign numbers (1 to 2*n) randomly within the 2*n boxes before starting the experiment.
@@ -194,7 +201,6 @@ picking_randomly <- function(n, prisoners, nreps){
   # (Each) prisoner opens n boxes at random, checking each card for their number.
   # Input:  n: number of boxes (each) prisoner opens.
   #         prisoners: prisoners' numbers.
-  #         initial_box: box number that (each) prisoner will open first.
   #         nreps: the number of iterations of the simulations to run (in order
   #                to estimate the probability)
   # Output: prob: the probability of (all) the prisoner(s) succeeding in finding
@@ -205,15 +211,17 @@ picking_randomly <- function(n, prisoners, nreps){
   # Initialization of "success_simulation"
   success_simulation <- 0  
   
-  # Running the experiment (simulation) nreps times.
+  # Running the experiment nreps times (nreps simulations).
   for (i in 1:nreps){
     
     # boxes_found represents the number of prisoners found their boxes in each simulation.
-    # Reset of "boxes_found" in each repetition.
+    # Reset of "boxes_found" in each simulation.
     boxes_found <- 0 
     
+    # Loop through the prisoners vector (all prisoners try to find their box).
     for (k in 1:length(prisoners)){
       
+      # Boolean to terminate the run of a single simulation if one prisoner fails finding their number.
       prisoner_succ <- FALSE
       
       # we create 2n boxes, n of which can be opened.
@@ -222,13 +230,15 @@ picking_randomly <- function(n, prisoners, nreps){
       # if the prisoner's number is in the randomly selected boxes... 
       if (k %in% boxes){
         
-        # counter increases
+        # counter increases by 1, since the prisoner running the experiment succeeds in finding their number. 
         boxes_found <- boxes_found + 1
         
+        # Set to TRUE since the prisoner found their number.
         prisoner_succ <- TRUE
       }
       
       # Exit the loop when one prisoner fails in finding their box.
+      # prisoner_succ will be FALSE only if a prisoner fails to find their number in the boxes.
       if (!(prisoner_succ)){
         break
       }
@@ -249,7 +259,9 @@ picking_randomly <- function(n, prisoners, nreps){
 
 # ---------- Example code ----------
 
-# ---- Individual success probability ----
+# ---- Individual success probability ---- 
+
+# Prisoner with the number 4 tries to find their number (k = 4)
 
 # Example estimating the individual success probability under Strategy 1, n =5 (nreps = 10000 by default)
 Pone(n = 5, k = 4 , strategy = 1)
@@ -270,7 +282,9 @@ Pone(n = 5, k = 4, strategy = 3)
 Pone(n = 50, k = 4, strategy = 3)
 
 # Computing the individual success probability under strategies 1 and 3 for a different number of 
-# boxes (2n boxes): n = 5, and n = 50, the probability of success is almost 1/2 in all those cases.
+# boxes (2n boxes): n = 5, and n = 50, the probability of success is close to 1/2
+# (opening up to n of the 2n boxes (half of the boxes) randomly => P(success) = 1/2).
+
 # On the other hand, the individual success probability under strategy 2
 # for n = 5 and n = 50 is less than or equal to the prob. of success under strategies 1 and 3.
 
@@ -295,13 +309,15 @@ Pall(n = 5, strategy = 3)
 Pall(n = 50, strategy = 3)
 
 # Computing the joint success probability under strategy 1 for a different number of boxes (2n boxes):
-# n = 5, and n = 50, the probability of success is close to 35% and 31% respectively. 
+# n = 5, and n = 50, the probability of success is close to 35% and 31% respectively.
 # On the other hand, the joint probability under strategies 2 and 3 for a different
 # number of boxes (2n boxes): n = 5 and n = 50 is close to 0.
 
 # So, what is surprising is that it is more likely that 100 (n = 50) prisoners
 # will release (all prisoners find their number) under Strategy 1
 # than even 10 (n = 5) prisoners open boxes under Strategies 2 and 3.
+
+# Strategy 1 has a surprisingly high probability of allowing all prisoners to go free.
 
 # -----
 
